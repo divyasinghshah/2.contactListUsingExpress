@@ -1,0 +1,33 @@
+body {
+  margin-top: 50px;
+}
+#contact-heading {
+  text-align: center;
+  color: rgb(68, 67, 67);
+}
+#list {
+  width: 50%;
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+
+  background-color: rgb(64, 151, 151);
+}
+#list > li {
+  background-color: darkslategray;
+  margin: 10px;
+  padding: 10px;
+  display: block;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#list > li:hover {
+  background-color: dimgray;
+}
+
+button {
+  background-color: darkviolet;
+  color: white;
+}
