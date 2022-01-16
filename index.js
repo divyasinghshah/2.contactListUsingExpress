@@ -2,6 +2,8 @@ const { fuchsia } = require('color-name');
 const express=require('express');
 const port=8000;
 const path=require('path');
+const db=require('./config/mongoose');
+const Contact=require('./models/contact');
 
 
 const app=express();
@@ -23,23 +25,21 @@ app.use(express.static('assets'));
 //     next();
 // });
 
-var contactList=[
-    {
-        name:'Divya',
-        phone:'1111111'
-    },{
-        name:'Dhruv',
-        phone:'23432235'
-    }
-];
 app.get('/',function(req,res){
     // res.send("<h1>Cool!! it is running</h1>");
     // console.log(__dirname);
     // return res.render('home');
-    return res.render('home',{
-        title:'Contacts List',
-        contacts:contactList
-    });
+    Contact.find({},function(err,contact){
+        if(err){
+            console.log("Error in fetching contacts",err);
+            return;
+        }
+
+        res.render('home',{
+            title:"Contact Lists",
+            contacts:contact
+        });
+    })
 });
 app.get('/practice',function(req,res){
     return res.render('practice',{
@@ -48,23 +48,30 @@ app.get('/practice',function(req,res){
 });
 
 app.post('/create-contact',function(req,res){
-    contactList.push({
+    Contact.create({
         name:req.body.name,
         phone:req.body.phone
+    },function(err,newContact){
+        if(err){
+            console.log("Error in adding contact to db",err);
+            return;
+        }
+        
+        return res.redirect('/');
     });
-    // contactList.push(req.body);
-    return res.redirect('/');
 });
 
 app.get('/delete-contact',function(req,res){
-    let phone=req.query.phone;
-    let contactIndex=contactList.findIndex(contact => contact.phone==phone);
-    if(contactIndex!=-1){
-        contactList.splice(contactIndex,1);
-    }
-
-    return res.redirect('/');
-})
+    let id=req.query.id;
+    Contact.findByIdAndDelete(id,function(err){
+        if(err){
+            console.log("Error in Deleting contact",err);
+            return;
+        }
+        return res.redirect('/');
+    });
+    
+});
 
 
 app.listen(port,function(e){
