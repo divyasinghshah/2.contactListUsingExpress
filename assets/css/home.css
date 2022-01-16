@@ -31,3 +31,10 @@ button {
   background-color: darkviolet;
   color: white;
 }
+a {
+  color: white;
+  padding: 5px;
+}
+a:hover {
+  color: red;
+}
